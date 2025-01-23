@@ -15,12 +15,11 @@ pipeline {
 
     stages {
         stage('Clone Repository') {
+	    agent {label ''k8s_master}		
             steps {
-		dir('/home/ubuntu/jenkins/') {
                 git 'https://github.com/Ramya-barath/beginner-html-site-styled.git'
 		}
-            }
-        }
+         }
         
         stage('Build Docker Image') {
 	   steps {						
