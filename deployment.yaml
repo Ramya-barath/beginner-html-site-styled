@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beginner-html-site-styled
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: beginner-html-site-styled
+  template:
+    metadata:
+      labels:
+        app: beginner-html-site-styled
+    spec:
+      containers:
+        - name: beginner-html-site-styled
+          image: 14ramya91/proj_build
+          ports:
+            - containerPort: 80
