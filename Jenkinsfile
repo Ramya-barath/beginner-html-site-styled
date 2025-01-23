@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Clone Repository') {	
             steps {
-                git 'https://github.com/Ramya-barath/beginner-html-site-styled.git'
+                git url'https://github.com/Ramya-barath/beginner-html-site-styled.git'
 		}
          }
         
