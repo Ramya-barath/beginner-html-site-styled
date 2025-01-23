@@ -16,12 +16,14 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
+		dir('/home/ubuntu/jenkins/') {
                 git 'https://github.com/Ramya-barath/beginner-html-site-styled.git'
+		}
             }
         }
         
         stage('Build Docker Image') {
-            steps {
+	   steps {						
                 script {
                     // Build Docker image using Dockerfile in the repository
                     docker.build("${IMAGE_NAME}:${TAG}")
