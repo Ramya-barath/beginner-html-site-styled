@@ -14,8 +14,7 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
-	    agent {label ''k8s_master}		
+        stage('Clone Repository') {	
             steps {
                 git 'https://github.com/Ramya-barath/beginner-html-site-styled.git'
 		}
