@@ -7,12 +7,7 @@ pipeline {
         KUBECONFIG = '/etc/Kubernetes/admin.config'
         DEPLOYMENT_FILE = '/home/ubuntu/beginner-html-site-styled/deployment.yaml'
         NODEPORT_SERVICE_FILE = '/home/ubuntu/beginner-html-site-styled/service.yaml'
-    }
-    
-    triggers {        
-        githubPush()
-    }
-
+    }        
     stages {
         stage('Clone Repository') {	
             steps {
