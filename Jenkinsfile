@@ -1,5 +1,5 @@
 pipeline {
-    agent any    
+    agent { label 'k8s_master' }   
     environment {        
         DOCKERHUB_CREDENTIALS_ID = 'c1101c3b-e018-40ab-a70a-89e62bdd3bdc'
         DOCKER_IMAGE = '14ramya91/proj_build'
