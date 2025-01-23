@@ -22,8 +22,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordvariable: 'Zox29@#@@')]) {
-                        sh "sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                        sh "sudo docker push $DOCKER_IMAGE"
+                        docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        docker.image("${DOCKER_IMAGE}").push()
+                       }
                     }
                 }
             }
