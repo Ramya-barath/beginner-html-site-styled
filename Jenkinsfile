@@ -4,6 +4,7 @@ pipeline {
         DOCKER_IMAGE = '14ramya91/beginner-html-site-styled'
         DOCKER_CREDENTIALS_ID = 'c1101c3b-e018-40ab-a70a-89e62bdd3bdc'
         KUBE_CONFIG = '/etc/kubernetes/admin.conf'
+	DOCKER_PASSWORD = 'Zox29@#@@'
     }
     stages {
         stage('Clone Repository') {
@@ -21,7 +22,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordvariable: 'Zox29@#@@')]) {
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordvariable: 'DOCKER_PASSWORD')]) {
                         docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                         docker.image("${DOCKER_IMAGE}").push()
                        }
