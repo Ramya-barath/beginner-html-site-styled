@@ -1,78 +1,47 @@
 pipeline {
-    agent { label 'k8s_master' }   
-    environment {        
-        DOCKERHUB_CREDENTIALS_ID = 'c1101c3b-e018-40ab-a70a-89e62bdd3bdc'
-        DOCKER_IMAGE = '14ramya91/proj_build'
-        TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-        KUBECONFIG = '/etc/Kubernetes/admin.config'
-        DEPLOYMENT_FILE = '/home/ubuntu/beginner-html-site-styled/deployment.yaml'
-        NODEPORT_SERVICE_FILE = '/home/ubuntu/beginner-html-site-styled/service.yaml'
-    }        
+    agent { label 'k8s_master'}
+    environment {
+        DOCKER_IMAGE = '14ramya91/beginner-html-site-styled'
+        DOCKER_CREDENTIALS_ID = 'c1101c3b-e018-40ab-a70a-89e62bdd3bdc'
+        KUBE_CONFIG = '/etc/kubernetes/admin.conf'
+    }
     stages {
-        stage('Clone Repository') {	
+        stage('Clone Repository') {
             steps {
-                git(url :'https://github.com/Ramya-barath/beginner-html-site-styled.git')
-		}
-         }
-        
+                git 'https://github.com/Ramya-barath/beginner-html-site-styled.git'
+            }
+        }
         stage('Build Docker Image') {
-	   steps {						
+            steps {
                 script {
-                    // Build Docker image using Dockerfile in the repository
-                    docker.build("${IMAGE_NAME}:${TAG}")
+                    sh 'echo Zox29@#@@ | sudo -S docker build -t $DOCKER_IMAGE .'
                 }
             }
         }
-
-        stage('Login to DockerHub') {
+        stage('Push Docker Image') {
             steps {
                 script {
-		    withDockerRegistry([credentialsId: 'c1101c3b-e018-40ab-a70a-89e62bdd3bdc', url: 'https://index.docker.io/v1/']) {	
-		    echo 'Successfully logged into DockerHub.'
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'Zox29@#@@')]) {
+                        sh "sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        sh "sudo docker push $DOCKER_IMAGE"
                     }
                 }
             }
         }
-
-        stage('Push Docker Image to DockerHub') {
-            steps {
-                script {
-		    withDockerRegistry([credentialsId: 'c1101c3b-e018-40ab-a70a-89e62bdd3bdc', url: 'https://index.docker.io/v1/']) {                  
-                    docker.push("${IMAGE_NAME}:${TAG}")
-		   }	
-                }
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                   
-                    sh """
-                    kubectl apply -f ${DEPLOYMENT_FILE} 
-                    kubectl apply -f ${NODEPORT_SERVICE_FILE}
-                    """
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                script {                    
-                    sh "kubectl get pods"
-                    sh "kubectl get svc"
+                    sh 'kubectl apply -f deployment.yaml -f service.yaml --kubeconfig=$KUBE_CONFIG'
                 }
             }
         }
     }
-
     post {
         success {
-            echo 'Deployment and image push completed successfully.'
+            echo 'Pipeline executed successfully!'
         }
-
         failure {
-            echo 'The pipeline failed.'
+            echo 'Pipeline failed!'
         }
     }
 }
